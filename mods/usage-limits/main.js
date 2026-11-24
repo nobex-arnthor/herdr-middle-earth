@@ -5,7 +5,7 @@
 // this mod never reads a token. Everything below main.js is pure and tested.
 import { View, div, image, svg } from "gpui-kit";
 import { HoverCard, h_flex, v_flex } from "gpui-base";
-import { exec, focused, theme, props, shared, setShared, appHome } from "herdr";
+import { exec, focused, theme, props, shared, setShared, appHome, home } from "herdr";
 import { PROVIDERS } from "./providers/index.js";
 import { barModel, cardModel, chooseDensity, panelOnEnter } from "./lib/view.js";
 import { effectivePrefs, isOnBar, isShown, toggleOnBar, toggleProvider, toggleShowBars, toggleShowRemaining, toggleShowResetTime, toggleWindow } from "./lib/prefs.js";
@@ -33,6 +33,35 @@ const PANEL_CLOSE_DELAY = 300;      // ms, lets the pointer cross from the bar t
 
 const now = () => Math.floor(Date.now() / 1000);
 const states = () => shared(KEY_STATE) ?? {};
+
+// On Windows, a Herdr started from the Start menu gets Explorer's PATH, which often
+// has Git\cmd but not Git\bin, where sh.exe lives, and a new PATH entry only reaches
+// it after signing out. So when "sh" isn't found, try Git for Windows' own sh.exe in
+// its usual places: the installer's (all users, then per user) and Scoop's.
+const shCandidates = () => [
+  "sh",
+  "C:/Program Files/Git/bin/sh.exe",
+  `${home()}/AppData/Local/Programs/Git/bin/sh.exe`,
+  `${home()}/scoop/apps/git/current/bin/sh.exe`,
+];
+const NO_SH = "sh not found. On Windows, add C:\\Program Files\\Git\\bin to your user Path, then sign out and back in.";
+let sh = null; // the first candidate that ran, kept for later calls
+
+const notFound = (e) => /not found|not installed/i.test(String(e?.message ?? e));
+
+async function runSh(args) {
+  if (sh) return exec(sh, args);
+  for (const candidate of shCandidates()) {
+    try {
+      const r = await exec(candidate, args);
+      sh = candidate;
+      return r;
+    } catch (e) {
+      if (!notFound(e)) throw e;
+    }
+  }
+  throw new Error(NO_SH);
+}
 
 function levelColor(level, t) {
   if (level === "hot") return t.ansi1 ?? t.blocked;
@@ -86,7 +115,7 @@ export default class UsageLimits extends View {
       let next;
       const prev = states()[p.id] ?? { report: null, lastGood: null, installed: null };
       try {
-        const r = await exec("sh", [`${appHome()}/mods/${MOD}/${p.helper}`]);
+        const r = await runSh([`${appHome()}/mods/${MOD}/${p.helper}`]);
         next = r.code === 127 ? nextState(prev, null, false) : nextState(prev, p.parse(r.stdout, now()), true);
       } catch (e) {
         next = { ...prev, report: { status: "error", message: String(e?.message ?? e), plan: null, observedAt: now(), source: p.helper, windows: [] } };
@@ -115,7 +144,7 @@ export default class UsageLimits extends View {
         const app = AGENTS[info.status?.app];
         const pid = info.foreground?.pid;
         if (app && pid) {
-          const r = await exec("sh", [`${appHome()}/mods/${MOD}/helpers/session.sh`, app, String(pid)]);
+          const r = await runSh([`${appHome()}/mods/${MOD}/helpers/session.sh`, app, String(pid)]);
           const data = r.code === 0 ? parseSession(r.stdout, app) : null;
           if (data) next = { data, title: (info.cwd ?? "").split("/").pop() };
         }
