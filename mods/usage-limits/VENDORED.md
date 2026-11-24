@@ -5,3 +5,6 @@ and re-applying the changes below.
 Changes:
 - helpers/claude-usage.sh and helpers/codex-limits.sh: feeds the CLI through a plain pipe instead of a FIFO, so it also works under
   Git Bash on Windows (MSYS FIFOs don't reach native Windows programs). Same request, same output.
+- main.js: runs the helpers through runSh() instead of exec("sh"). When "sh" isn't on Herdr's PATH (a Windows Herdr
+  started from the Start menu often lacks Git\bin), it tries Git for Windows' sh.exe in its usual install folders, and
+  says how to fix PATH when none is found.

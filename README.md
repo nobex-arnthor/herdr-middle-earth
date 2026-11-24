@@ -105,7 +105,7 @@ When nothing matches, the card simply has no bar.
 
 The status bar's right side comes from VladTemp27's [usage-limits](https://github.com/VladTemp27/herdr-mods/tree/main/usage-limits) mod (Apache-2.0), vendored in `mods/usage-limits` with its `LICENSE` and `NOTICE`. It asks your own CLIs every 5 minutes: `claude` briefly with `--safe-mode` and no prompt, and `codex app-server`. Each CLI authenticates itself; the mod reads no tokens or credentials. No Claude settings or statusline needed. The helpers are patched to use a plain pipe instead of a FIFO so they also work on Windows (see `mods/usage-limits/VENDORED.md`).
 
-On Windows the helpers run `sh`: add `C:\Program Files\Git\bin` to your user `Path` (a Herdr started from the Start menu or a launcher only sees `Git\cmd`), then restart whatever launches Herdr so it picks up the new `Path`.
+On Windows the helpers run Git Bash's `sh`. A Herdr started from the Start menu gets Explorer's `Path`, which usually has `Git\cmd` but not `Git\bin`, so when `sh` isn't on its `Path` the mod falls back to Git for Windows' `sh.exe` in its usual places (`C:\Program Files\Git`, a per-user install under `AppData\Local\Programs\Git`, or Scoop). If Git lives somewhere else, add its `bin` folder to your user `Path`, then sign out and back in: restarting Herdr alone keeps Explorer's old `Path`.
 
 ## Editing the art
 
