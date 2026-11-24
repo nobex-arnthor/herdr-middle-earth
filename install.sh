@@ -9,7 +9,7 @@ STAMP="$(date +%Y%m%d-%H%M%S)"
 # Outside mods/ and layouts/: a backed-up mod folder left in mods/ would load as a mod of its own.
 BACKUP="$HERDR_HOME/backups/middle-earth-$STAMP"
 LAYOUT="middle-earth"
-MODS=(fellowship fellowship-toast fellowship-status realms)
+MODS=(fellowship fellowship-toast fellowship-status realms usage-limits)
 THEMES=(shire mordor)
 
 fail() { echo "install.sh: $*" >&2; exit 1; }

@@ -18,7 +18,7 @@ The window is a row with no system title bar (`"titlebar": "none"`). The macOS w
 - **Work column**, right:
   - **Tabs**, 42px: the shipped `tabs`. It is a window drag area.
   - **Body**: a row with padding 8 and gap 8. The active tab's panes are cards: radius 10, a 1px `border` that turns `accent` on focus, and a 30px `pane` header always shown. A Files/Changes stack (368px, min 280, max 900) starts hidden on the right.
-  - **Status bar**, 28px (`fellowship-status`): the machine, the branch, then one colored dot and count per agent state that has agents: "N awaiting counsel" (blocked, in the `blocked` color), "N returned", "N on the road", "N resting". With no agents it says "The road is quiet". The palette hint sits on the far right. It also puts the number of blocked agents on the Dock icon with `setBadge`, only when the number changes, and clears it at zero.
+  - **Status bar**, 28px (`fellowship-status`): the machine, the branch, then one colored dot and count per agent state that has agents: "N awaiting counsel" (blocked, in the `blocked` color), "N returned", "N on the road", "N resting". With no agents it says "The road is quiet". The palette hint sits on the far right. It also puts the number of blocked agents on the Dock icon with `setBadge`, only when the number changes, and clears it at zero. The status bar is a row: `fellowship-status` (weight 3) and the vendored `usage-limits` (weight 2, min 130, `align: right`) showing Claude Code and Codex plan usage.
 
 Themes: `{ "light": "shire", "dark": "mordor" }` set on the layout.
 

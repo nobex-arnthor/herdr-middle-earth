@@ -31,7 +31,7 @@ Your agents become the Fellowship and your spaces become the realms. Light mode 
 - **Spaces:** each space gets a realm emblem: Shire, Rivendell, Gondor, Rohan, Lórien, Moria or Mordor.
 - **Notifications:** toasts and macOS banners in character, with the sprite. Each hero has a line of their own ("Gandalf arrives precisely when he means to", "Gimli won't take another step without you").
 - **Dock badge:** the Herdr icon shows how many agents are waiting for you.
-- **Status bar:** counts agents by state ("2 on the road · 1 awaiting counsel").
+- **Status bar:** counts agents by state ("2 on the road · 1 awaiting counsel"). On the right, your Claude Code and Codex plan usage (5-hour, weekly and per-model windows, e.g. `5h 42% · wk 61%`) from the [usage-limits](#plan-usage) mod, with a hover panel for reset times.
 - **Also included:** a Claude Code icon holding the Ring, a hobbit-door shell icon, and custom alert sounds.
 
 ## Rare editions
@@ -101,6 +101,12 @@ Herdr doesn't report an agent's model or context use, so the cards read them off
 
 When nothing matches, the card simply has no bar.
 
+## Plan usage
+
+The status bar's right side comes from VladTemp27's [usage-limits](https://github.com/VladTemp27/herdr-mods/tree/main/usage-limits) mod (Apache-2.0), vendored in `mods/usage-limits` with its `LICENSE` and `NOTICE`. It asks your own CLIs every 5 minutes: `claude` briefly with `--safe-mode` and no prompt, and `codex app-server`. Each CLI authenticates itself; the mod reads no tokens or credentials. No Claude settings or statusline needed. The helpers are patched to use a plain pipe instead of a FIFO so they also work on Windows (see `mods/usage-limits/VENDORED.md`).
+
+On Windows the helpers run `sh`: add `C:\Program Files\Git\bin` to your user `Path` (a Herdr started from the Start menu or a launcher only sees `Git\cmd`), then restart whatever launches Herdr so it picks up the new `Path`.
+
 ## Editing the art
 
 The agent sprites are 24x24 grids and the realm emblems 16x16, all in `tools/sprites.py`. To regenerate them, run:
@@ -119,4 +125,4 @@ Issues and pull requests are welcome, and reports from Linux and Windows help th
 
 ## License
 
-MIT.
+MIT. `mods/usage-limits` is Apache-2.0 (see its `LICENSE` and `NOTICE`).

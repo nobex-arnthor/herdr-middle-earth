@@ -157,11 +157,34 @@
           "gap": 8
         },
         {
-          "id": "status",
-          "type": "block",
-          "content": {
-            "mod": "fellowship-status"
-          },
+          "id": "status-row",
+          "type": "row",
+          "children": [
+            {
+              "id": "status",
+              "type": "block",
+              "content": {
+                "mod": "fellowship-status"
+              },
+              "size": {
+                "weight": 3
+              }
+            },
+            {
+              "id": "usage-limits",
+              "type": "block",
+              "content": {
+                "mod": "usage-limits",
+                "props": {
+                  "align": "right"
+                }
+              },
+              "size": {
+                "weight": 2
+              },
+              "min": 130
+            }
+          ],
           "size": {
             "px": 28
           }
